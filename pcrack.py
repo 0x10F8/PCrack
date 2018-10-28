@@ -19,6 +19,8 @@ class Success:
 def crack_process(target, length, charset, hashtype):
     cracker = crack.crack_factory[hashtype]
     brute_str_gen = permutations.Permutations(charset, length)
+    brute_str_gen.set_current_length(length)
+    brute_str_gen.generate_indexes()
     success = Success()
     while brute_str_gen.has_next() and not success.found:
         cracker(target, brute_str_gen.next(), success.callback).check()
