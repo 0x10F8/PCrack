@@ -11,15 +11,17 @@ class Crack:
     crack classes.
     """
 
-    def __init__(self, target_hash, plaintext_attempt):
+    def __init__(self, target_hash, plaintext_attempt, callback_function):
         """
         Initialize the crack
 
         :param target_hash: The target hash
-        :param plaintext_attempt: The current plaintext attempt
+        :param plaintext_attempt: The current plaintext attempt]
+        :param the callback function if the crack was successful
         """
         self.target_hash = target_hash
         self.plaintext_attempt = plaintext_attempt
+        self.callback_function = callback_function
 
     @abstractmethod
     def test(self):
@@ -30,6 +32,10 @@ class Crack:
         """
         pass
 
+    def check(self):
+        if self.test():
+            self.callback_function(self.plaintext_attempt)
+
 
 class HashLibCrack(Crack):
     """
@@ -37,15 +43,16 @@ class HashLibCrack(Crack):
     constructor of any implementation.
     """
 
-    def __init__(self, target_hash, plaintext_attempt, digest):
+    def __init__(self, target_hash, plaintext_attempt, callback_function, digest):
         """
         Initialize the crack with the target hash, plain text attempt and the hashlib hash function.
 
         :param target_hash: The target hash
         :param plaintext_attempt: The plain text attempt
+        :param the callback function if the test was successful
         :param digest: The hashlib digest function
         """
-        super(HashLibCrack, self).__init__(target_hash, plaintext_attempt)
+        super(HashLibCrack, self).__init__(target_hash, plaintext_attempt, callback_function)
         self.digest = digest
 
     def test(self):
@@ -66,8 +73,8 @@ class MD5Crack(HashLibCrack):
     MD5 implementation of the hashlib crack
     """
 
-    def __init__(self, target_hash, plaintext_attempt):
-        super(MD5Crack, self).__init__(target_hash, plaintext_attempt, md5)
+    def __init__(self, target_hash, plaintext_attempt, callback_function):
+        super(MD5Crack, self).__init__(target_hash, plaintext_attempt, callback_function, md5)
 
 
 class SHA1Crack(HashLibCrack):
@@ -75,8 +82,8 @@ class SHA1Crack(HashLibCrack):
     SHA1 implementation of the hashlib crack
     """
 
-    def __init__(self, target_hash, plaintext_attempt):
-        super(SHA1Crack, self).__init__(target_hash, plaintext_attempt, sha1)
+    def __init__(self, target_hash, plaintext_attempt, callback_function):
+        super(SHA1Crack, self).__init__(target_hash, plaintext_attempt, callback_function, sha1)
 
 
 class SHA256Crack(HashLibCrack):
@@ -84,8 +91,8 @@ class SHA256Crack(HashLibCrack):
     SHA256 implementation of the hashlib crack
     """
 
-    def __init__(self, target_hash, plaintext_attempt):
-        super(SHA256Crack, self).__init__(target_hash, plaintext_attempt, sha256)
+    def __init__(self, target_hash, plaintext_attempt, callback_function):
+        super(SHA256Crack, self).__init__(target_hash, plaintext_attempt, callback_function, sha256)
 
 
 class SHA512Crack(HashLibCrack):
@@ -93,8 +100,8 @@ class SHA512Crack(HashLibCrack):
     SHA512 implementation of the hashlib crack
     """
 
-    def __init__(self, target_hash, plaintext_attempt):
-        super(SHA512Crack, self).__init__(target_hash, plaintext_attempt, sha512)
+    def __init__(self, target_hash, plaintext_attempt, callback_function):
+        super(SHA512Crack, self).__init__(target_hash, plaintext_attempt, callback_function, sha512)
 
 
 class BCryptCrack(Crack):
